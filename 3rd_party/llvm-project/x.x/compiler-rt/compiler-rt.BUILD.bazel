@@ -1048,12 +1048,10 @@ cc_library(
         ":sanitizer_sources",
     ],
     copts = SANITIZER_CFLAGS,
-    implementation_deps = select({
-        "@llvm//toolchain:runtimes_none": [
-            ":linux_libc_headers",
-        ],
-        "//conditions:default": [],
-    }),
+    implementation_deps = [
+        ":libcxx_headers",
+        ":sanitizers_interface_headers",
+    ],
     includes = [
         "include",
         "lib",
@@ -1076,12 +1074,10 @@ cc_library(
         ":sanitizer_libcdep_sources",
     ],
     copts = SANITIZER_CFLAGS,
-    implementation_deps = select({
-        "@llvm//toolchain:runtimes_none": [
-            ":linux_libc_headers",
-        ],
-        "//conditions:default": [],
-    }),
+    implementation_deps = [
+        ":libcxx_headers",
+        ":sanitizers_interface_headers",
+    ],
     includes = [
         "include",
         "lib",
