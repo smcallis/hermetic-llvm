@@ -29,6 +29,7 @@ _LLVM_TOOLS = [
     "llvm-readtapi",
     "llvm-size",
     "llvm-symbolizer",
+    "llvm-xray",
     "sancov",
 ]
 

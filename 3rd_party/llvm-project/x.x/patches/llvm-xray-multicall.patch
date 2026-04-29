@@ -1,0 +1,56 @@
+diff --git a/llvm/tools/llvm-xray/llvm-xray.cpp b/llvm/tools/llvm-xray/llvm-xray.cpp
+--- a/llvm/tools/llvm-xray/llvm-xray.cpp
++++ b/llvm/tools/llvm-xray/llvm-xray.cpp
+@@ -16,10 +16,11 @@
+ //   llvm-xray [options] <subcommand> [subcommand-specific options]
+ //
+ #include "xray-registry.h"
++#include "llvm/Support/LLVMDriver.h"
+ #include "llvm/Support/CommandLine.h"
+ #include "llvm/Support/raw_ostream.h"
+ 
+ using namespace llvm;
+ using namespace llvm::xray;
+ 
+-int main(int argc, char *argv[]) {
++int llvm_xray_main(int argc, char *argv[], const llvm::ToolContext &) {
+diff --git a/utils/bazel/llvm-project-overlay/llvm/BUILD.bazel b/utils/bazel/llvm-project-overlay/llvm/BUILD.bazel
+--- a/utils/bazel/llvm-project-overlay/llvm/BUILD.bazel
++++ b/utils/bazel/llvm-project-overlay/llvm/BUILD.bazel
+@@ -5139,17 +5139,22 @@
+-cc_binary(
+-    name = "llvm-xray",
++cc_library(
++    name = "llvm-xray-lib",
+     srcs = glob([
+         "tools/llvm-xray/*.cpp",
+         "tools/llvm-xray/*.h",
+     ]),
+     copts = llvm_copts,
+-    stamp = 0,
+     deps = [
+         ":DebugInfoDWARF",
+         ":Object",
+         ":Support",
+         ":Symbolize",
+         ":XRay",
+     ],
+ )
+ 
++
++llvm_driver_cc_binary(
++    name = "llvm-xray",
++    stamp = 0,
++    deps = [":llvm-xray-lib"],
++)
+diff --git a/utils/bazel/llvm-project-overlay/llvm/driver.bzl b/utils/bazel/llvm-project-overlay/llvm/driver.bzl
+--- a/utils/bazel/llvm-project-overlay/llvm/driver.bzl
++++ b/utils/bazel/llvm-project-overlay/llvm/driver.bzl
+@@ -36,6 +36,7 @@ _TOOLS = {
+     "llvm-readobj": "//llvm:llvm-readobj-lib",
+     "llvm-readtapi": "//llvm:llvm-readtapi-lib",
+     "llvm-size": "//llvm:llvm-size-lib",
+     "llvm-symbolizer": "//llvm:llvm-symbolizer-lib",
++    "llvm-xray": "//llvm:llvm-xray-lib",
+     "sancov": "//llvm:sancov-lib",
+ }

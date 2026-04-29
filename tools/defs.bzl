@@ -43,6 +43,7 @@ TOOLCHAIN_BINARIES = [
     "llvm-strip",
     "llvm-symbolizer",
     "llvm-windres",
+    "llvm-xray",
     # "clang-tidy",
     # "clang-format",
     # "clangd",
